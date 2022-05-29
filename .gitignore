@@ -4,6 +4,7 @@ Desktop.ini
 /dist
 /src/*/
 /build/*/
+/.vscode
 *.lib
 *.a
 *.o
