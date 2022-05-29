@@ -50,8 +50,8 @@ download_file_if_it_doesnt_exist(../deps/libdeflate.h https://raw.githubusercont
 download_file_if_it_doesnt_exist(../bsresources.zip http://aos.party/bsresources.zip)
 download_file_if_it_doesnt_exist(microui.c https://raw.githubusercontent.com/rxi/microui/master/src/microui.c)
 download_file_if_it_doesnt_exist(microui.h https://raw.githubusercontent.com/rxi/microui/master/src/microui.h)
-download_file_if_it_doesnt_Exist(color.c https://raw.githubusercontent.com/411anon/ccolorconv/master/color.c)
-download_file_if_it_doesnt_Exist(color.h https://raw.githubusercontent.com/411anon/ccolorconv/master/color.h)
+download_file_if_it_doesnt_exist(color.c https://raw.githubusercontent.com/411anon/ccolorconv/master/color.c)
+download_file_if_it_doesnt_exist(color.h https://raw.githubusercontent.com/411anon/ccolorconv/master/color.h)
 
 list(APPEND CLIENT_SOURCES aabb.c)
 list(APPEND CLIENT_SOURCES camera.c)
