@@ -1,14 +1,13 @@
-[![Build Status](https://aos.party/jenkins/buildStatus/icon?job=BetterSpades)](https://aos.party/jenkins/job/BetterSpades/)
-[![](https://img.shields.io/github/downloads/xtreme8000/BetterSpades/total.svg)](https://github.com/xtreme8000/BetterSpades/releases)
-[![Discord](https://img.shields.io/badge/discord-join-ff00ff.svg)](https://discord.gg/9JGXKBt)
 [![GPL](https://img.shields.io/badge/license-GPL--3.0-red.svg)](https://github.com/xtreme8000/BetterSpades/blob/standalone/LICENSE)
-[![DonateBTC](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://github.com/xtreme8000/BetterSpades#donate)
 
 ![GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)
+## ![](docs/icon_small.png) fourspades
 
-## ![](docs/icon_small.png) BetterSpades
+A BetterSpades fork with classic gameplay elements restored.
 
 * Replicate of the great game *Ace of Spades* (classic voxlap)
+* A focus on versions of the game from 0.52 and earlier, with 0.75 fixes
+* runs on modern systems without resolution problems or mouse issues
 * runs on very old systems back to OpenGL 1.1 (OpenGL ES support too)
 * shares similar if not even better performance to voxlap
 * can run on *"embedded"* systems like a [Steam Link](https://store.steampowered.com/app/353380/Steam_Link/)
@@ -16,15 +15,14 @@
 #### Why should I use this instead of ...?
 
 * free of any Jagex code, they can't shut it down
-* open for future expansion
+* classic HUD, original WW1 aesthetic
+* more accurate rifle
+* no SMG or shotgun
+* no sprinting or autoclimb
 * easy to use
 * no hidden bugs
 
 ### Quick usage guide
-
-**As of right now, you can download the newest stable version from the [releases page](https://github.com/xtreme8000/BetterSpades/releases).**
-
-**You can get [nightly builds here](https://aos.party/jenkins/job/BetterSpades/).**
 
 You can either:
 * use the client temporarily by extracting the downloaded zip into a new directory.
@@ -63,6 +61,7 @@ This project uses the following libraries and files:
 | hashtable    | *MIT*           | hashtable              | [Link](https://github.com/goldsborough/hashtable/) |
 | libvxl       | *MIT*           | access VXL format      | [Link](https://github.com/xtreme8000/libvxl/)      |
 | microui      | *MIT*           | user interface         | [Link](https://github.com/rxi/microui)             |
+| cglm         | *MIT*           | fast math              | [Link](https://github.com/recp/cglm)               |
 
 You will need to compile the following by yourself, or get hold of precompiled binaries:
 
@@ -74,36 +73,66 @@ You will need to compile the following by yourself, or get hold of precompiled b
 
 Follow the instructions on their project page, then place produced static libraries in `deps/`.
 
+If you are compiling 32-bit binaries, you need 32-bit static libraries. If you are compiling 64-bit binaries, you need 64-bit static libraries.
+
 All other requirements of the above list (like single file libs) will be downloaded by CMake automatically and **don't** need to be taken care of. Because state of copyright of 0.75 assets is unknown, CMake will also download additional assets from [*here*](http://aos.party/bsresources.zip) which are not part of this repository.
 
-#### Windows
+### Windows (MSYS2)
 
-This project uses CMake to generate all Makefiles automatically. It's best to use MinGW-w64 for GCC on Windows. You can generate the required files by opening `cmd.exe` in the `build/` directory and typing:
+Here's a few tips on getting started building on Windows:
+
+* [How to install GCC & MSYS2](https://github.com/orlp/dev-on-windows/wiki/Installing-GCC--&-MSYS2)
+* [How to configure Visual Studio Code for C development](https://code.visualstudio.com/docs/cpp/config-mingw)
+* [How to add the MSYS2 terminal to Visual Studio Code](https://stackoverflow.com/questions/45836650/how-do-i-integrate-msys2-shell-into-visual-studio-code-on-window/68253833#68253833) *(change MINGW64 to MINGW32 if building 32-bit binaries)*
+
+If targeting 32-bit and 64-bit Windows, install these packages (recommended):
+```
+pacman -S --needed base-devel mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-glfw mingw-w64-i686-mesa mingw-w64-i686-openal mingw-w64-i686-enet mingw-w64-i686-glew mingw-w64-i686-libdeflate
+```
+
+If targeting only 64-bit Windows, install these packages:
+```
+pacman -S --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-glfw mingw-w64-x86_64-mesa mingw-w64-x86_64-openal mingw-w64-x86_64-enet mingw-w64-x86_64-glew mingw-w64-x86_64-libdeflate
+```
+
+To target Windows XP when using MSYS2, you will need to downgrade `mingw-w64-i686-libwinpthread-git` and `mingw-w64-i686-winpthreads-git` packages to version `7.0.0.5273.3e5acf5d-1` or earlier:
+```
+wget https://github.com/Marisa-Chan/UA_source_XP_build/raw/main/pkg_cache/mingw-w64-i686-libwinpthread-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz
+wget https://github.com/Marisa-Chan/UA_source_XP_build/raw/main/pkg_cache/mingw-w64-i686-winpthreads-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz
+
+pacman -U --noconfirm mingw-w64-i686-libwinpthread-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz mingw-w64-i686-winpthreads-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz
+
+rm mingw-w64-i686-libwinpthread-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz
+rm mingw-w64-i686-winpthreads-git-5.0.0.4573.628fdbf-1-any.pkg.tar.xz
+```
+
+This project uses CMake to generate all Makefiles automatically. For 32-bit binaries, you can generate the required files by opening the MSYS2 MINGW32 shell in the `build/` directory and typing:
 ```
 cmake -G "MinGW Makefiles" ..
 mingw32-make
 ```
 
-If everything went well, the client should be in the `build/BetterSpades/` subfolder.
+If everything went well, `client.exe` should be in the `build/BetterSpades/` subfolder. `OpenAL32.dll` must be placed in the same directory as `client.exe` for the game to launch.
 
-When starting `client.exe`, you will be greeted by a server list. Select a server on it to start playing!
-You can also start the client the same way as you did with the voxlap version by opening cmd and putting an `aos://` link in as the first argument:
-
+To connect directly to localhost:
 ```
-client.exe -aos://16777343:32887 //Connects to a local server
+client.exe -aos://16777343:32887
 ```
 
-#### Linux
+### Linux (Ubuntu 20.04/WSL2)
 
-Compilation now works the same on Linux. Just change the build system to `Unix Makefiles` or leaving it as default will work too (`cmake ..`).
-
-You can build each library yourself, or install them with your distro's package manager:
+Install these packages:
 ```
-sudo apt install libgl1-mesa libgl1-mesa-dev libopenal1 libopenal-dev libglfw-dev libenet-dev libglew-dev
+sudo apt install build-essential cmake libgl1-mesa-glx libgl1-mesa-dev libopenal1 libopenal-dev libglfw3-dev libenet-dev libglew-dev libdeflate-dev
 ```
-(this does not include [libdeflate](https://github.com/ebiggers/libdeflate) which is a requirement too, see [_Wiki/Building_](https://github.com/xtreme8000/BetterSpades/wiki/Building) for more details)
 
-Start the client e.g. with the following inside the `build/bin/` directory:
+Inside the `build` directory, run these commands to configure the build system and begin compiling:
+```
+cmake ..
+make
+```
+
+This command will start the client inside the `build/bin/` directory:
 ```
 ./client
 ```
@@ -111,18 +140,3 @@ Or connect directly to localhost:
 ```
 ./client -aos://16777343:32887
 ```
-
-
-#### macOS
-
-The same instructions for Linux work on macOS aside from some minor differences. First, use Homebrew or MacPorts to grab dependencies:
-```
-brew install glfw enet
-```
-The development headers for OpenAL and OpenGL don't have to be installed since they come with macOS by default. [libdeflate](https://github.com/ebiggers/libdeflate) should be installed and placed manually in a way similar to Linux. See [_Wiki/Building_](https://github.com/xtreme8000/BetterSpades/wiki/Building) for more details.
-
-## Gallery
-
-| <img src="/docs/pic01.png" width="250px"><br />*quite old* | <img src="/docs/pic02.png" width="250px"><br />hiesville | <img src="/docs/pic03.png" width="250px"> |
-| :-: | :-: | :-: |
-| <img src="/docs/pic04.png" width="250px"><br />*grenade fun* | <img src="/docs/pic05.png" width="250px"><br />*falling block animation* | <img src="/docs/pic06.png" width="250px"><br />*sniping on normandie* |
