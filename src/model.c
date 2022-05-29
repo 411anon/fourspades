@@ -452,15 +452,15 @@ void kv6_render(struct kv6_t* kv6, unsigned char team) {
 			switch(team) {
 				case TEAM_1:
 					glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,
-							   (float[]) {gamestate.team_1.red * 0.75F / 255.0F,
-										  gamestate.team_1.green * 0.75F / 255.0F,
-										  gamestate.team_1.blue * 0.75F / 255.0F, 1.0F});
+							   (float[]) {gamestate.team_1.red_model * 0.75F / 255.0F,
+										  gamestate.team_1.green_model * 0.75F / 255.0F,
+										  gamestate.team_1.blue_model * 0.75F / 255.0F, 1.0F});
 					break;
 				case TEAM_2:
 					glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,
-							   (float[]) {gamestate.team_2.red * 0.75F / 255.0F,
-										  gamestate.team_2.green * 0.75F / 255.0F,
-										  gamestate.team_2.blue * 0.75F / 255.0F, 1.0F});
+							   (float[]) {gamestate.team_2.red_model * 0.75F / 255.0F,
+										  gamestate.team_2.green_model * 0.75F / 255.0F,
+										  gamestate.team_2.blue_model * 0.75F / 255.0F, 1.0F});
 					break;
 				default: glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, (float[]) {0, 0, 0, 1});
 			}
@@ -588,10 +588,10 @@ void kv6_render(struct kv6_t* kv6, unsigned char team) {
 
 		switch(team) {
 			case TEAM_1:
-				glColor3ub(gamestate.team_1.red * 0.75F, gamestate.team_1.green * 0.75F, gamestate.team_1.blue * 0.75F);
+				glColor3ub(gamestate.team_1.red_model * 0.75F, gamestate.team_1.green_model * 0.75F, gamestate.team_1.blue_model * 0.75F);
 				break;
 			case TEAM_2:
-				glColor3ub(gamestate.team_2.red * 0.75F, gamestate.team_2.green * 0.75F, gamestate.team_2.blue * 0.75F);
+				glColor3ub(gamestate.team_2.red_model * 0.75F, gamestate.team_2.green_model * 0.75F, gamestate.team_2.blue_model * 0.75F);
 				break;
 			default: glColor3ub(0, 0, 0);
 		}

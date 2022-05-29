@@ -37,6 +37,7 @@
 #include "particle.h"
 #include "texture.h"
 #include "chunk.h"
+#include "color.h"
 
 void (*packets[256])(void* data, int len) = {NULL};
 
@@ -254,12 +255,38 @@ void read_PacketStateData(void* data, int len) {
 	gamestate.team_1.green = p->team_1_green;
 	gamestate.team_1.blue = p->team_1_blue;
 
+	gamestate.team_1.red_model = p->team_1_red;
+	gamestate.team_1.green_model = p->team_1_green;
+	gamestate.team_1.blue_model = p->team_1_blue;
+
 	memcpy(gamestate.team_2.name, p->team_2_name, sizeof(p->team_1_name));
 	gamestate.team_2.name[sizeof(p->team_1_name)] = 0;
 
 	gamestate.team_2.red = p->team_2_red;
 	gamestate.team_2.green = p->team_2_green;
 	gamestate.team_2.blue = p->team_2_blue;
+
+	gamestate.team_2.red_model = p->team_2_red;
+	gamestate.team_2.green_model = p->team_2_green;
+	gamestate.team_2.blue_model = p->team_2_blue;
+
+	float team_1_hue, team_1_saturation, team_1_value;
+	float team_2_hue, team_2_saturation, team_2_value;
+	convertRGBtoHSV(gamestate.team_1.red, gamestate.team_1.green, gamestate.team_1.blue, &team_1_hue, &team_1_saturation, &team_1_value);
+	convertRGBtoHSV(gamestate.team_2.red, gamestate.team_2.green, gamestate.team_2.blue, &team_2_hue, &team_2_saturation, &team_2_value);
+
+	if (team_1_saturation > 0.60F)
+		team_1_saturation = 0.60F;
+	if (team_2_saturation > 0.60F)
+		team_2_saturation = 0.60F;
+
+	if (team_1_saturation > 0.0F)
+		team_1_value = 0.627F;
+	if (team_2_saturation > 0.0F)
+		team_2_value = 0.627F;
+
+	convertHSVtoRGB(team_1_hue, team_1_saturation, team_1_value, &gamestate.team_1.red_model, &gamestate.team_1.green_model, &gamestate.team_1.blue_model);
+	convertHSVtoRGB(team_2_hue, team_2_saturation, team_2_value, &gamestate.team_2.red_model, &gamestate.team_2.green_model, &gamestate.team_2.blue_model);
 
 	gamestate.gamemode_type = p->gamemode;
 
@@ -271,9 +298,29 @@ void read_PacketStateData(void* data, int len) {
 
 	sound_create(SOUND_LOCAL, &sound_intro, 0.0F, 0.0F, 0.0F);
 
-	fog_color[0] = p->fog_red / 255.0F;
-	fog_color[1] = p->fog_green / 255.0F;
-	fog_color[2] = p->fog_blue / 255.0F;
+	float fog_hue, fog_saturation, fog_value;
+	convertRGBtoHSV(p->fog_red, p->fog_green, p->fog_blue, &fog_hue, &fog_saturation, &fog_value);
+
+	if (fog_hue > 189.0F && fog_hue < 191.0F && fog_value == 1.0F) {
+		fog_hue = 240.0F;
+		fog_saturation = 0.143F;
+		fog_value = 0.878F;
+	} else {
+		if (fog_value >= 0.75F) {
+			if (fog_saturation > 0.40F)
+				fog_saturation = 0.20F;
+		} else if (fog_value < 0.75F) {
+			if (fog_saturation > 0.40F)
+				fog_saturation = 0.40F;
+		}
+	}
+
+	unsigned char fog_r, fog_g, fog_b;
+	convertHSVtoRGB(fog_hue, fog_saturation, fog_value, &fog_r, &fog_g, &fog_b);
+
+	fog_color[0] = fog_r / 255.0F;
+	fog_color[1] = fog_g / 255.0F;
+	fog_color[2] = fog_b / 255.0F;
 
 	local_player_id = p->player_id;
 	local_player_health = 100;
@@ -330,9 +377,30 @@ void read_PacketStateData(void* data, int len) {
 
 void read_PacketFogColor(void* data, int len) {
 	struct PacketFogColor* p = (struct PacketFogColor*)data;
-	fog_color[0] = p->red / 255.0F;
-	fog_color[1] = p->green / 255.0F;
-	fog_color[2] = p->blue / 255.0F;
+
+	float fog_hue, fog_saturation, fog_value;
+	convertRGBtoHSV(p->red, p->green, p->blue, &fog_hue, &fog_saturation, &fog_value);
+
+	if (fog_hue > 189.0F && fog_hue < 191.0F && fog_value == 1.0F) {
+		fog_hue = 240.0F;
+		fog_saturation = 0.143F;
+		fog_value = 0.878F;
+	} else {
+		if (fog_value >= 0.75F) {
+			if (fog_saturation > 0.40F)
+				fog_saturation = 0.20F;
+		} else if (fog_value < 0.75F) {
+			if (fog_saturation > 0.40F)
+				fog_saturation = 0.40F;
+		}
+	}
+
+	unsigned char fog_r, fog_g, fog_b;
+	convertHSVtoRGB(fog_hue, fog_saturation, fog_value, &fog_r, &fog_g, &fog_b);
+
+	fog_color[0] = fog_r / 255.0F;
+	fog_color[1] = fog_g / 255.0F;
+	fog_color[2] = fog_b / 255.0F;
 }
 
 void read_PacketExistingPlayer(void* data, int len) {

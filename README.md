@@ -62,6 +62,7 @@ This project uses the following libraries and files:
 | libvxl       | *MIT*           | access VXL format      | [Link](https://github.com/xtreme8000/libvxl/)      |
 | microui      | *MIT*           | user interface         | [Link](https://github.com/rxi/microui)             |
 | cglm         | *MIT*           | fast math              | [Link](https://github.com/recp/cglm)               |
+| ccolorconv   | *Apache*        | color conversion       | [Link](https://github.com/411anon/ccolorconv)      |
 
 You will need to compile the following by yourself, or get hold of precompiled binaries:
 
