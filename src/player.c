@@ -942,7 +942,7 @@ void player_boxclipmove(struct Player* p, float fsynctics) {
 		z -= 0.9f;
 	if(z < -1.36f)
 		p->pos.x = nx;
-	else if(!p->input.keys.crouch && p->orientation.z < 0.5f && !p->input.keys.sprint) {
+	else if(!p->input.keys.crouch && p->orientation.z < 0.5f && !p->input.keys.sprint && p->pos.z > 60) {
 		z = 0.35f;
 		while(z >= -2.36f && !player_clipbox(nx + f, p->pos.y - 0.45f, nz + z)
 			  && !player_clipbox(nx + f, p->pos.y + 0.45f, nz + z))
@@ -965,7 +965,7 @@ void player_boxclipmove(struct Player* p, float fsynctics) {
 		z -= 0.9f;
 	if(z < -1.36f)
 		p->pos.y = ny;
-	else if(!p->input.keys.crouch && p->orientation.z < 0.5f && !p->input.keys.sprint && !climb) {
+	else if(!p->input.keys.crouch && p->orientation.z < 0.5f && !p->input.keys.sprint && !climb && p->pos.z > 60) {
 		z = 0.35f;
 		while(z >= -2.36f && !player_clipbox(p->pos.x - 0.45f, ny + f, nz + z)
 			  && !player_clipbox(p->pos.x + 0.45f, ny + f, nz + z))
