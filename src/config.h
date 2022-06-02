@@ -55,6 +55,7 @@ extern struct RENDER_OPTIONS {
 	float camera_fov;
 	int hold_down_sights;
 	int chat_shadow;
+	float gamepad_sensitivity;
 } settings, settings_tmp;
 
 extern struct list config_keys;

@@ -76,6 +76,7 @@ void config_save() {
 	config_seti("client", "greedy_meshing", settings.greedy_meshing);
 	config_seti("client", "vsync", settings.vsync);
 	config_setf("client", "mouse_sensitivity", settings.mouse_sensitivity);
+	config_setf("client", "gamepad_sensitivity", settings.gamepad_sensitivity);
 	config_seti("client", "show_news", settings.show_news);
 	config_seti("client", "vol", settings.volume);
 	config_seti("client", "show_fps", settings.show_fps);
@@ -137,6 +138,8 @@ static int config_read_key(void* user, const char* section, const char* name, co
 			settings.vsync = atoi(value);
 		} else if(!strcmp(name, "mouse_sensitivity")) {
 			settings.mouse_sensitivity = atof(value);
+		} else if(!strcmp(name, "gamepad_sensitivity")) {
+			settings.gamepad_sensitivity = atoi(value);
 		} else if(!strcmp(name, "show_news")) {
 			settings.show_news = atoi(value);
 		} else if(!strcmp(name, "vol")) {
@@ -410,6 +413,14 @@ void config_reload() {
 				 .min = 0,
 				 .max = INT_MAX,
 				 .name = "Mouse sensitivity",
+			 });
+	list_add(&config_settings,
+			 &(struct config_setting) {
+				 .value = &settings_tmp.gamepad_sensitivity,
+				 .type = CONFIG_TYPE_FLOAT,
+				 .min = 0,
+				 .max = INT_MAX,
+				 .name = "Gamepad sensitivity",
 			 });
 	list_add(&config_settings,
 			 &(struct config_setting) {

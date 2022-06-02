@@ -297,16 +297,26 @@ void window_update() {
 			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_START, WINDOW_KEY_ESCAPE);
 			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, WINDOW_KEY_SPACE);
 			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, WINDOW_KEY_CROUCH);
+			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_RIGHT_THUMB, WINDOW_KEY_TAB);
 			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_LEFT_THUMB, WINDOW_KEY_SNEAK);
 			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_X, WINDOW_KEY_RELOAD);
+			gamepad_translate_key(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_Y, WINDOW_KEY_MAP);
 
 			window_pressed_keys[WINDOW_KEY_UP] = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] < -0.25F;
 			window_pressed_keys[WINDOW_KEY_DOWN] = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] > 0.25F;
 			window_pressed_keys[WINDOW_KEY_LEFT] = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] < -0.25F;
 			window_pressed_keys[WINDOW_KEY_RIGHT] = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X] > 0.25F;
 
-			joystick_mouse[0] += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 15.0F;
-			joystick_mouse[1] += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 15.0F;
+			bool stick_pegged_x = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] > 0.95F || state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] < -0.95F;
+			bool stick_pegged_y = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] > 0.95F || state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] < -0.95F;
+			float stick_sens_x = stick_pegged_x ? settings.gamepad_sensitivity * 3.0F : settings.gamepad_sensitivity;
+			float stick_sens_y = stick_pegged_y ? settings.gamepad_sensitivity * 3.0F : settings.gamepad_sensitivity;
+
+			joystick_mouse[0] += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * stick_sens_x;
+			if (!settings.invert_y)
+				joystick_mouse[1] += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * stick_sens_y;
+			else
+				joystick_mouse[1] -= state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * stick_sens_y;
 			mouse(hud_window, joystick_mouse[0], joystick_mouse[1]);
 
 			gamepad_translate_button(&state, &joystick_state, GLFW_GAMEPAD_BUTTON_A, WINDOW_MOUSE_LMB);
